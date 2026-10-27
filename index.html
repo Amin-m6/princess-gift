@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="theme-color" content="#171918">
+  <title>Princess.exe — یک دور دیگه؟</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Princess.exe">
+        <span class="brand-crown">♛</span><span>Princess<span class="dot">.exe</span></span>
+      </a>
+      <button id="soundBtn" class="icon-btn" aria-label="روشن یا خاموش کردن صدا" title="صدا">♫</button>
+    </header>
+
+    <section id="homeScreen" class="screen home-screen">
+      <div class="hero">
+        <div class="crown-big">♛</div>
+        <div class="mascot" aria-hidden="true">
+          <span class="snake-head">◕‿◕<i>♛</i></span><span class="snake-body"></span>
+        </div>
+        <p class="eyebrow">NOT A REAL PRINCESS, BUT STILL SPECIAL</p>
+        <h1>آماده‌ای، پرنسس؟</h1>
+        <p class="muted">یکم تمرکز، یکم شانس، و لطفاً با دیوار وارد مذاکره نشو.</p>
+      </div>
+      <div class="stats-row">
+        <div class="stat"><span>بهترین رکورد</span><strong id="homeBest">۰</strong></div>
+        <div class="stat"><span>رکورد این جلسه</span><strong id="sessionBest">۰</strong></div>
+      </div>
+      <button id="startBtn" class="primary-btn">▶ شروع بازی</button>
+      <button id="howBtn" class="secondary-btn">چطور بازی کنیم؟</button>
+      <p class="tiny-note">با محبت ساخته شده؛ برای پرنسسی که خیلی هم پرنسس نیست ♥</p>
+    </section>
+
+    <section id="gameScreen" class="screen game-screen hidden">
+      <div class="game-head">
+        <div class="score-box"><span>امتیاز</span><strong id="score">۰</strong></div>
+        <div class="score-box best"><span>بهترین رکورد</span><strong id="best">۰</strong></div>
+        <button id="pauseBtn" class="icon-btn" aria-label="مکث">Ⅱ</button>
+      </div>
+      <div class="board-wrap">
+        <canvas id="board" width="420" height="420" aria-label="زمین بازی مار"></canvas>
+        <div id="toast" class="toast hidden" role="status"></div>
+        <div id="pauseOverlay" class="overlay hidden">
+          <div class="overlay-card"><span class="mini-crown">♛</span><h2>مذاکره موقتاً متوقف شد</h2><p>پرنسس نیاز به استراحت دیپلماتیک دارد.</p><button id="resumeBtn" class="primary-btn">ادامه بده</button></div>
+        </div>
+      </div>
+      <div class="controls" aria-label="کنترل حرکت">
+        <button class="dir up" data-dir="up" aria-label="بالا">▲</button>
+        <button class="dir left" data-dir="left" aria-label="چپ">◀</button>
+        <button class="dir down" data-dir="down" aria-label="پایین">▼</button>
+        <button class="dir right" data-dir="right" aria-label="راست">▶</button>
+      </div>
+      <p class="control-hint">با کلیدهای جهت‌دار، WASD یا دکمه‌ها حرکت کن</p>
+    </section>
+
+    <section id="endScreen" class="screen end-screen hidden">
+      <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+        <linearGradient id="heartGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff6aa8"/><stop offset=".55" stop-color="#ff1f6b"/><stop offset="1" stop-color="#c2003f"/></linearGradient>
+      </defs></svg>
+      <div class="heart-reveal" aria-hidden="true">
+        <span class="heart-glow"></span>
+        <div class="heart-half l"><svg viewBox="0 0 100 90"><path d="M50 88C20 62 2 44 2 26C2 12 13 2 27 2C37 2 46 8 50 16C54 8 63 2 73 2C87 2 98 12 98 26C98 44 80 62 50 88Z" fill="url(#heartGrad)" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/></svg></div>
+        <div class="heart-half r"><svg viewBox="0 0 100 90"><path d="M50 88C20 62 2 44 2 26C2 12 13 2 27 2C37 2 46 8 50 16C54 8 63 2 73 2C87 2 98 12 98 26C98 44 80 62 50 88Z" fill="url(#heartGrad)" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/></svg></div>
+      </div>
+      <div class="sparks" aria-hidden="true">
+        <i style="--a:0deg">♥</i><i style="--a:36deg">✦</i><i style="--a:72deg">♥</i><i style="--a:108deg">✦</i><i style="--a:144deg">♥</i>
+        <i style="--a:180deg">✦</i><i style="--a:216deg">♥</i><i style="--a:252deg">✦</i><i style="--a:288deg">♥</i><i style="--a:324deg">✦</i>
+      </div>
+      <div class="end-card">
+        <div id="endIcon" class="end-icon">♛</div>
+        <p id="endKicker" class="eyebrow">گزارش رسمی کاخ</p>
+        <h1 id="endTitle">پایان امپراتوری!</h1>
+        <p id="endMessage" class="end-message"></p>
+        <div class="stats-row end-stats">
+          <div class="stat"><span>امتیاز این دور</span><strong id="finalScore">۰</strong></div>
+          <div class="stat"><span>بهترین رکورد</span><strong id="finalBest">۰</strong></div>
+        </div>
+        <div id="newRecord" class="record-pill hidden">✦ رکورد جدید! ✦</div>
+        <button id="againBtn" class="primary-btn">یک دور دیگه؟</button>
+        <button id="homeBtn" class="secondary-btn">بازگشت به کاخ</button>
+      </div>
+    </section>
+
+    <dialog id="howDialog" class="how-dialog">
+      <form method="dialog">
+        <button class="dialog-close" aria-label="بستن">×</button>
+        <h2>قوانین بسیار علمی بازی</h2>
+        <p>🍌 موز: امتیاز معمولی؛ موز طلایی: امتیاز بیشتر.</p>
+        <p>🥛 دوغ: سرعت مار را برای چند ثانیه کم می‌کند.</p>
+        <p>🍵 چای: امتیازها را برای چند ثانیه دوبرابر می‌کند.</p>
+        <p>🍰 شیرینی: امتیاز خوب، همراه با یک نگاه قضاوت‌گرانه‌ی خیالی.</p>
+        <p>🚗 گاهی آزمون رانندگی سر می‌رسد. نترس؛ بازی هنوز باهات دشمن نشده.</p>
+        <p>♫ موزیک بازی رو با دکمه‌ی بالای صفحه می‌تونی خاموش و روشن کنی.</p>
+        <p class="muted">رکورد در همین مرورگر ذخیره می‌شود؛ پاک‌کردن داده‌های مرورگر ممکن است آن را پاک کند.</p>
+        <button class="primary-btn">فهمیدم، استاد اعظم</button>
+      </form>
+    </dialog>
+    <footer>تقدیم به پرنسسی که دوست داره پادشاه باشه <span>❤️❤️</span> 😊</footer>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>
